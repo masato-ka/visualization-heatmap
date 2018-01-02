@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en" ng-app="App">
+<head>
+    <meta charset="UTF-8">
+    <title>Viaualization AMG88xx</title>
+    <style>
+        td {
+            width: 50px;
+            height: 50px;
+            border-style: none;
+            border: 0px;
+        }
+    </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.6/angular.min.js"></script>
+    <script type=text/javascript src="./js/controller.js"></script>
+</head>
+<body ng-controller="ApplicationController">
+<center>
+<h1>Visualization.</h1>
+<table bgcolor="white" >
+    <tr ng-repeat="line in image">
+        <td ng-repeat="pixel in line" bgcolor={{pixel}}>1</td>
+    </tr>
+</table>
+</center>
+</body>
+</html>
