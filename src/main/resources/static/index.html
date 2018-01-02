@@ -19,7 +19,7 @@
 <h1>Visualization.</h1>
 <table bgcolor="white" >
     <tr ng-repeat="line in image">
-        <td ng-repeat="pixel in line" bgcolor={{pixel}}>1</td>
+        <td ng-repeat="pixel in line" style="background-color: rgb({{pixel[0]}},{{pixel[1]}},{{pixel[2]}})">1</td>
     </tr>
 </table>
 </center>

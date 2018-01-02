@@ -2,9 +2,11 @@ var app = angular.module('App',[]);
 
 app.controller('ApplicationController', ['$scope',function($scope){
 
+    var getPath = "/api/v1/thermography";
+
     $scope.image = [];
 
-    var temp = [[30.0,30.0,30.0,30.0,30.0,30.0,30.0,30.0],
+    var temp = [[80.0,30.0,30.0,30.0,30.0,30.0,30.0,30.0],
      [30.0,30.0,30.0,30.0,30.0,30.0,30.0,30.0],
      [30.0,30.0,30.0,30.0,20.0,30.0,30.0,30.0],
      [30.0,30.0,10.0,30.0,80.0,30.0,30.0,30.0],
@@ -22,15 +24,15 @@ app.controller('ApplicationController', ['$scope',function($scope){
 }]);
 
 
-var translateTempToRGB = function(templature){
+var translateTempToRGB = function(temp){
     var scale = 1/80.0;
-    templature * scale;
-    return colorRGBBar(templature * scale);
+    temp * scale;
+    return colorRGBBar(temp * scale);
 }
 
 var sigmoid = function(x, gain, offset){
     var value = (x+offset)*gain;
-    return ((Math.tanh(value*0.5)+1)*0.5)
+    return ((Math.tanh(value*0.5)+1)*0.5);
 }
 
 var colorRGBBar = function(x){
@@ -41,6 +43,6 @@ var colorRGBBar = function(x){
     blue = 1-sigmoid(x, gain, offset_x)
     green = sigmoid(x, gain, 0.6) + (1-sigmoid(x,gain,-1*0.6))
     green = green - 1.0
-    return [red,green,blue]
+    return [Math.floor(red*255),Math.floor(green*255),Math.floor(blue*255)];
 }
 
