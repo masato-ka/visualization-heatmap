@@ -1,31 +1,57 @@
 var app = angular.module('App',[]);
+var es = new EventSource('/api/v1/thermography/sse');
 
 app.controller('ApplicationController', ['$scope',function($scope){
 
-    var getPath = "/api/v1/thermography";
+//    var es = new EventSource('/api/v1/thermography/sse');
 
-    $scope.image = [];
+//    es.addEventListener('message', function (event) {
 
-    var temp = [[80.0,30.0,30.0,30.0,30.0,30.0,30.0,30.0],
-     [30.0,30.0,30.0,30.0,30.0,30.0,30.0,30.0],
-     [30.0,30.0,30.0,30.0,20.0,30.0,30.0,30.0],
-     [30.0,30.0,10.0,30.0,80.0,30.0,30.0,30.0],
-     [30.0,30.0,30.0,25.0,30.0,30.0,30.0,30.0],
-     [30.0,30.0,30.0,0.0,25.0,30.0,30.0,30.0],
-     [30.0,30.0,30.0,30.0,30.0,30.0,30.0,30.0],
-     [30.0,30.0,30.0,30.0,30.0,30.0,30.0,30.0]];
+//        console.log(event.data);
 
-    $scope.image = temp.map(function(line){
-        return line.map(function(temp){
-            return translateTempToRGB(temp);
-        })
+//        var temp = event.data;
+
+    es.addEventListener('message', function (event) {
+
+        var acceptData = JSON.parse(event.data);
+
+        var temp = []
+
+        for (var i = 0; i <= 56; i += 8) {
+            temp.push(acceptData.slice(i, i + 8));
+        }
+        $scope.image = [];
+        $scope.image = temp.map(function (line) {
+            return line.map(function (temp) {
+                return translateTempToRGB(temp);
+            })
+        });
+        $scope.$apply();
     });
 
+    data = function () {
+        $scope.image = [];
+        var temp = [[0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0],
+            [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]];
+
+        $scope.image = temp.map(function (line) {
+            return line.map(function (temp) {
+                return translateTempToRGB(temp);
+            })
+        });
+    }
+    data();
 }]);
 
 
 var translateTempToRGB = function(temp){
-    var scale = 1/80.0;
+    var scale = 1 / 50.0;
     temp * scale;
     return colorRGBBar(temp * scale);
 }
