@@ -3,12 +3,14 @@ package ka.masato.thermography.app;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.async.AsyncRequestTimeoutException;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import javax.jms.Queue;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RestController
@@ -48,8 +50,16 @@ public class Controller {
 
     @PostMapping
     public void postThermoGraphyTelemetory(@RequestBody List<Double> payload) {
-
         jmsTemplate.convertAndSend(queue, payload);
+    }
+
+    @ExceptionHandler
+    @ResponseBody
+    public String timeoutExceptionHandler(AsyncRequestTimeoutException asyncRequestTimeoutException) {
+        log.warn(asyncRequestTimeoutException.getMessage());
+        return SseEmitter.event().data("timeout async request.").build().stream()
+                .map(d -> d.getData().toString())
+                .collect(Collectors.joining());
     }
 
 
