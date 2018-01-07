@@ -3,14 +3,6 @@ var es = new EventSource('/api/v1/thermography/sse');
 
 app.controller('ApplicationController', ['$scope',function($scope){
 
-//    var es = new EventSource('/api/v1/thermography/sse');
-
-//    es.addEventListener('message', function (event) {
-
-//        console.log(event.data);
-
-//        var temp = event.data;
-
     es.addEventListener('message', function (event) {
 
         var acceptData = JSON.parse(event.data);
